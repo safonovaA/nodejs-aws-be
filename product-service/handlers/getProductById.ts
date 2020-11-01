@@ -1,12 +1,12 @@
 import { APIGatewayProxyHandler } from 'aws-lambda';
 import 'source-map-support/register';
 import { CORS_HEADERS } from '../constants/headers';
-import * as comics from '../mocks/comics.json';
+const comics = require('../mocks/comics.json');
 
 export const getProductById: APIGatewayProxyHandler = async (event, _context) => {
   console.log('Get by Id event pathParameters:', event.pathParameters);
-  const { id } = event.pathParameters;
   try {
+    const { id } = event.pathParameters;
     const item = findBookById(id);
     if (item) {
       return {
@@ -26,7 +26,7 @@ export const getProductById: APIGatewayProxyHandler = async (event, _context) =>
 
 function findBookById(id) {
   console.log('Product id:',id);
-  const item = comics.default.find((book) => { return book.id === id});
+  const item = comics.find((book) => { return book.id === id});
   console.log('Found product:', item);
   return item;
 }
