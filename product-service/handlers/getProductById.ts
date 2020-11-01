@@ -4,7 +4,7 @@ import { CORS_HEADERS } from '../constants/headers';
 import * as comics from '../mocks/comics.json';
 
 export const getProductById: APIGatewayProxyHandler = async (event, _context) => {
-  console.log('Get by Id event pathParameters', event.pathParameters);
+  console.log('Get by Id event pathParameters:', event.pathParameters);
   const { id } = event.pathParameters;
   try {
     const item = findBookById(id);
@@ -17,15 +17,18 @@ export const getProductById: APIGatewayProxyHandler = async (event, _context) =>
         body: JSON.stringify(item),
       };
     } else {
-      handleNotFound(id);
+      return handleNotFound(id);
     }
   } catch (err) {
-    handleError(err);
+    return handleError(err);
   }
 }
 
 function findBookById(id) {
-  return comics.default.find((book) => { return book.id == id});
+  console.log('Product id:',id);
+  const item = comics.default.find((book) => { return book.id === id});
+  console.log('Found product:', item);
+  return item;
 }
 
 function handleError(err) {
@@ -44,6 +47,6 @@ function handleNotFound(id: string) {
       ...CORS_HEADERS,
     },
     statusCode: 404,
-    body: `Comics books with ${id} was not found!`,
+    body: `Comics books with id:${id} was not found!`,
   }
 }
