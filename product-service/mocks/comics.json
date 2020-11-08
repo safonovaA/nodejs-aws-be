@@ -1,0 +1,26 @@
+[
+  {
+    "id": "1",
+    "title": "Batman: The Killing Joke, Issue 1",
+    "price": 9.17,
+    "author": "Alan Moore, Brian Bolland",
+    "published": "1988",
+    "img": "https://images-na.ssl-images-amazon.com/images/I/51GgmyZXn4L._SX319_BO1,204,203,200_.jpg"
+  },
+  {
+    "id": "2",
+    "title": "V for Vendetta",
+    "price": 15.77,
+    "author": "Alan Moore",
+    "published": "2008",
+    "img": "https://images-na.ssl-images-amazon.com/images/I/51aOaDhv0GL._SX333_BO1,204,203,200_.jpg"
+  },
+  {
+    "id": "3",
+    "title": "What Cats Want: An illustrated guide for truly understanding your cat Hardcover",
+    "price": 12.3,
+    "author": "Dr. Yuki Hattori",
+    "published": "2020",
+    "img": "https://images-na.ssl-images-amazon.com/images/I/41YQU9NBZBL._SX349_BO1,204,203,200_.jpg"
+  }
+]
