@@ -6,6 +6,6 @@ import { CORS_HEADERS } from "../constants/headers";
       ...CORS_HEADERS,
     },
     statusCode: 500,
-    body: err,
+    body: JSON.stringify(err),
   }
 }

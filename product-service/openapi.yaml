@@ -37,7 +37,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/Product'
+              $ref: '#/components/schemas/ProductBody'
   /products/{productId}:
     get:
       summary: Get product by Id
@@ -55,7 +55,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ProductBody'
+                $ref: '#/components/schemas/Product'
         404:
           description: Not found book
 components:
