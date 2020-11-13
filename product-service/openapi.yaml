@@ -1,17 +1,20 @@
 openapi: 3.0.0
+servers:
+  - url: https://vkv07g1v93.execute-api.eu-west-1.amazonaws.com/dev
 info:
-  title: Comics Book API
   description: This is API for comics book store
-  version: 1.0.0
+  version: "1.0.0"
+  title: Comics Book API
+
 paths:
   /products:
     get:
       summary: get list of books
+      operationId: getProducts
       description: |
         Get list of all comics books
-      operationId: getProducts
       responses:
-        "200":
+        200:
           description: Found results
           content:
             application/json:
@@ -19,39 +22,57 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/Product'
+    post:
+      summary: add product to system
+      operationId: postProduct
+      description: |
+        Add new product to store
+      responses:
+        400:
+          description: Invalid body
+        204:
+          description: Product is added
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ProductBody'
   /products/{productId}:
     get:
-      summary: Delete city
-      description: Delete city by ID
+      summary: Get product by Id
+      description: Get product by Id
       parameters:
-      - name: productId
-        in: path
-        description: ID of product.
-        required: true
-        style: simple
-        explode: false
-        schema:
-          type: string
+        - in: path
+          name: productId
+          required: true
+          description: ID of product.
+          schema:
+            type: string
       responses:
-        "200":
-          description: Found book
+        200:
+          description: Deleted
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/Product'
-        "404":
+        404:
           description: Not found book
 components:
   schemas:
     Product:
-      required:
-      - id
-      - title
       type: object
+      required:
+        - id
+        - title
+        - price
+        - author
+        - count
+        - published
       properties:
         id:
           type: string
-          example: 1
+          example: 9882d995-b93e-4eec-aae4-eb808db1a79f
         title:
           type: string
           example: V for Vandetta
@@ -63,7 +84,37 @@ components:
           example: Alan Moore
         published:
           type: string
-          example: 2008
+          example: '2008'
+        count:
+          type: number
+          example: 5
+        img:
+          type: string
+          example: https://some-url
+    ProductBody:
+      type: object
+      required:
+        - title
+        - price
+        - author
+        - count
+        - published
+      properties:
+        title:
+          type: string
+          example: V for Vandetta
+        price:
+          type: number
+          example: 15.17
+        author:
+          type: string
+          example: Alan Moore
+        published:
+          type: string
+          example: '2008'
+        count:
+          type: number
+          example: 5
         img:
           type: string
           example: https://some-url
