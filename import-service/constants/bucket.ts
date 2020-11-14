@@ -1,0 +1,1 @@
+export const BUCKET = 'sa-product-bucket';
