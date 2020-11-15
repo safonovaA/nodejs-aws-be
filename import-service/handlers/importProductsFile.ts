@@ -21,7 +21,7 @@ export const importProductsFile: APIGatewayProxyHandler = async (event, _context
         ...CORS_HEADERS,
       },
       statusCode: 200,
-      body: JSON.stringify(signedURL),
+      body: signedURL,
     };
   } catch (err) {
     console.log('Import product file: unexpected error', err);

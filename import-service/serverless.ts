@@ -13,10 +13,13 @@ const serverlessConfiguration: Serverless = {
     webpack: {
       webpackConfig: './webpack.config.js',
       includeModules: true
+    },
+    jest: {
+      jestConfig: './jest.config.js',
     }
   },
   // Add the serverless-webpack plugin
-  plugins: ['serverless-webpack'],
+  plugins: ['serverless-webpack', 'serverless-jest-plugin'],
   provider: {
     name: 'aws',
     runtime: 'nodejs12.x',
