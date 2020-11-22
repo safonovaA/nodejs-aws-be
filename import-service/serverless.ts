@@ -29,6 +29,9 @@ const serverlessConfiguration: Serverless = {
     },
     environment: {
       AWS_NODEJS_CONNECTION_REUSE_ENABLED: '1',
+      SQS_URL: {
+        Ref: 'SQSQueue'
+      }
     },
     iamRoleStatements: [
       {
@@ -40,6 +43,11 @@ const serverlessConfiguration: Serverless = {
         Effect: 'Allow',
         Action: 's3:*',
         Resource: 'arn:aws:s3:::sa-product-bucket/*',
+      },
+      {
+        Effect: 'Allow',
+        Action: 'sqs:*',
+        Resource: '${cf:import-service-${self:provider.stage}.SQSQueueArn}',
       }
     ]
   },
@@ -77,6 +85,24 @@ const serverlessConfiguration: Serverless = {
       ]
     },
   },
+  resources: {
+    Resources: {
+      SQSQueue: {
+        Type: 'AWS::SQS::Queue',
+        Properties: {
+          QueueName: 'parsed-products-queue'
+        }
+      }
+    },
+    Outputs: {
+        SQSQueueUrl: {
+          Value: { Ref: 'SQSQueue' },
+        },
+        SQSQueueArn: {
+          Value: { "Fn::GetAtt": [ 'SQSQueue', 'Arn' ]}
+        }
+      },
+  }
 }
 
 module.exports = serverlessConfiguration;

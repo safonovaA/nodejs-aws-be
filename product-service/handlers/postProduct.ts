@@ -5,6 +5,7 @@ import { CORS_HEADERS } from '../constants/headers';
 import { DB_OPTIONS } from '../constants/db-options';
 import { handleError } from './error-handlers';
 import { Product } from '../constants/product';
+import { validateRequiredFieldsPayload } from './validators';
 
 export const postProduct: APIGatewayProxyHandler = async (event, _context) => {
   console.log('Post Product: API Gateway proxy event', event);
@@ -54,16 +55,6 @@ export const postProduct: APIGatewayProxyHandler = async (event, _context) => {
   } finally {
     client.end();
   }
-}
-
-function validateRequiredFieldsPayload(payload: Product) {
-  const {
-    title, price,
-    author, published,
-    count,
-  } = payload;
-
-  return title && price && author && published && count;
 }
 
 function handleBadRequest() {
