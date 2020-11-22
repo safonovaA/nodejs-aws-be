@@ -14,7 +14,6 @@ export const catalogBatchProcess: SQSHandler = async (event, _context) => {
   console.log(`Received ${products.length} product/s`, products);
 
   try {
-    console.log('HELLO')
     await client.connect();
     await client.query('BEGIN');
     console.log(validValues);
@@ -37,7 +36,6 @@ export const catalogBatchProcess: SQSHandler = async (event, _context) => {
     }));
 
     await client.query('COMMIT');
-    console.log('BYE')
   } catch (err) {
     console.log('Unexpected error', err);
     await client.query('ROLLBACK');
