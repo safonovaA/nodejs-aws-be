@@ -16,7 +16,6 @@ export const catalogBatchProcess: SQSHandler = async (event, _context) => {
   try {
     await client.connect();
     await client.query('BEGIN');
-    console.log(validValues);
     await Promise.all(validValues.map(async (product) => {
       const {
         title, description, price,
