@@ -34,7 +34,20 @@ const serverlessConfiguration: Serverless = {
       PG_DATABASE: process.env.PG_DATABASE,
       PG_USERNAME: process.env.PG_USERNAME,
       PG_PASSWORD: process.env.PG_PASSWORD,
+      SNS_TOPIC_ARN: {Ref: 'SNSTopic'},
     },
+    iamRoleStatements: [
+      {
+        Effect: 'Allow',
+        Action: 'sqs:*',
+        Resource: '${cf:import-service-${self:provider.stage}.SQSQueueArn}',
+      },
+      {
+        Effect: 'Allow',
+        Action: 'sns:*',
+        Resource: { Ref: 'SNSTopic'},
+      },
+    ]
   },
   functions: {
     getProducts: {
@@ -80,6 +93,45 @@ const serverlessConfiguration: Serverless = {
         }
       ]
     },
+    catalogBatchProcess: {
+      handler: 'handler.catalogBatchProcess',
+      events: [
+        {
+          sqs: {
+            batchSize: 5,
+            arn: '${cf:import-service-${self:provider.stage}.SQSQueueArn}'
+          }
+        }
+      ],
+    }
+  },
+  resources: {
+    Resources: {
+      SNSTopic: {
+        Type: 'AWS::SNS::Topic',
+        Properties: {
+          TopicName: 'create-product-topic'
+        }
+      },
+      SNSSubscriptionNotEmptyUpload: {
+        Type: 'AWS::SNS::Subscription',
+        Properties: {
+          Endpoint: 'aws.node.sa@gmail.com',
+          Protocol: 'email',
+          TopicArn: { Ref: 'SNSTopic' },
+          FilterPolicy: '{"count": [{"numeric": [">", 0]}]}',
+        }
+      },
+      SNSSubscriptionEmpty: {
+        Type: 'AWS::SNS::Subscription',
+        Properties: {
+          Endpoint: 'aasafonova@bk.ru',
+          Protocol: 'email',
+          TopicArn: { Ref: 'SNSTopic' },
+          FilterPolicy: '{"count": [{"numeric": ["=", 0]}]}',
+        }
+      },
+    }
   }
 }
 
