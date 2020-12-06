@@ -19,7 +19,7 @@ const serverlessConfiguration: Serverless = {
     }
   },
   // Add the serverless-webpack plugin
-  plugins: ['serverless-webpack', 'serverless-jest-plugin'],
+  plugins: ['serverless-webpack', 'serverless-jest-plugin', 'serverless-pseudo-parameters'],
   provider: {
     name: 'aws',
     runtime: 'nodejs12.x',
@@ -60,6 +60,13 @@ const serverlessConfiguration: Serverless = {
             method: 'get',
             path: 'import',
             cors: true,
+            authorizer: {
+              name: 'requestAuthorizer',
+              arn: 'arn:aws:lambda:${AWS::Region}:${AWS::AccountId}:function:authorization-service-dev-basicAuthorizer',
+              resultTtlInSeconds: 0,
+              identitySource: 'method.request.header.Authorization',
+              type: 'request',
+            },
             request: {
               parameters: {
                 querystrings: {
@@ -92,6 +99,34 @@ const serverlessConfiguration: Serverless = {
         Properties: {
           QueueName: 'parsed-products-queue'
         }
+      },
+      UnauthorizedResponse: {
+        Type: 'AWS::ApiGateway::GatewayResponse',
+        Properties: {
+          ResponseParameters: {
+            'gatewayresponse.header.Access-Control-Allow-Origin': "'*'",
+            'gatewayresponse.header.Access-Control-Allow-Headers': "'*'"
+          },
+          ResponseType: 'UNAUTHORIZED',
+          RestApiId: {
+            Ref: 'ApiGatewayRestApi'
+          },
+          StatusCode: '401',
+        }
+      },
+      AccessDeniedResponse: {
+        Type: 'AWS::ApiGateway::GatewayResponse',
+        Properties: {
+          ResponseParameters: {
+            'gatewayresponse.header.Access-Control-Allow-Origin': "'*'",
+            'gatewayresponse.header.Access-Control-Allow-Headers': "'*'"
+          },
+          ResponseType: 'ACCESS_DENIED',
+          RestApiId: {
+            Ref: 'ApiGatewayRestApi'
+          },
+          StatusCode: '403',
+        }
       }
     },
     Outputs: {
@@ -102,7 +137,7 @@ const serverlessConfiguration: Serverless = {
           Value: { "Fn::GetAtt": [ 'SQSQueue', 'Arn' ]}
         }
       },
-  }
+  },
 }
 
 module.exports = serverlessConfiguration;
